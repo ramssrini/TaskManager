@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Http, RequestOptions, Headers} from '@angular/http';
 import { TaskVO } from '../task';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 
 @Injectable() 
 export class TaskManagerService{
@@ -18,27 +18,14 @@ getTasks(): Promise<any>{
    
 }
 
-// getTasksById(id): Promise<TaskVO>{
-//   console.log(id);
-//   return this.http.get(this.baseUrl+"getTask?id="+id)
-//    .toPromise()
-//    .then(res=>res.json());
+getTasksById(id): Observable<any>{
+  return this.http.get(this.baseUrl+"getTask?id="+id);
    
-// }
-
-getTasksById(id): any{
-  console.log(id);
-  
-   this.http.get(this.baseUrl+"getTask?id="+id)
-  .subscribe((res) => {
-    let resSTR = JSON.stringify(res);
-    let resJSON = JSON.parse(resSTR);
-    return resJSON._body;
-  })
 }
 
+
+
 delete(id): Promise<any>{
-  console.log(id);
   return this.http.delete(this.baseUrl+"delete?id="+id)
    .toPromise()
    .then(res=>res.json());

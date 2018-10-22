@@ -12,7 +12,7 @@ import { switchMap } from 'rxjs/operators';
   styleUrls: ['./updatetask.component.css']
 })
 export class UpdatetaskComponent implements OnInit {
-  public task :string;
+  public task :TaskVO;
   @Input('taskName') taskName : string;
   parentTaskName : string;
   startDate : string;
@@ -36,16 +36,8 @@ export class UpdatetaskComponent implements OnInit {
     this.route.params.subscribe(params => {
       // this.sub = new  TaskVO();
       this.selectedId = params['id']; // (+) converts string 'id' to a number
-      // In a real app: dispatch action to load the details here.
-      // this.updateTaskForm.get('taskName').valueChanges.subscribe(data => this.taskName = data);
    });
 
-    console.log(this.task);
-  //  this.updateTaskForm.get("taskName").setValue("sdfgsdsdgsgsfsdg");
-   this.updateTaskForm.get("parentTaskName").setValue("this.sub.parentTask");
-   this.updateTaskForm.get("startDate").setValue("2001-11-11");
-   this.updateTaskForm.get("endDate").setValue("2001-11-11");
-   this.updateTaskForm.get("priority").setValue("5");
   }
   
   
@@ -68,7 +60,13 @@ export class UpdatetaskComponent implements OnInit {
     
 //     this.updateTaskForm.get('parentTaskName').statusChanges.subscribe(data => this.usrNameStatus = data);
 
-const req = this.service.getTasksById(this.selectedId);
-console.log(req);
+this.service.getTasksById(this.selectedId).subscribe(res => {
+  this.task = JSON.parse(res._body);
+  this.updateTaskForm.get("taskName").setValue(this.task.task);
+  this.updateTaskForm.get("parentTaskName").setValue(this.task.parentTask);
+  this.updateTaskForm.get("priority").setValue(this.task.priority);
+  this.updateTaskForm.get("startDate").setValue(this.task.startDate);
+  this.updateTaskForm.get("endDate").setValue(this.task.startDate);
+});
 } 
 }
